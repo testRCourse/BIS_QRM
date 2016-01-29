@@ -4,6 +4,9 @@
 #################  data cleaning ########################
 #########################################################
 # read file
+# select two variables (interval, check with frequencies)
+# explore missing values (you do not have to test for 
+# missingness at random)
 
 
 
