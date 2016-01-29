@@ -56,7 +56,7 @@
 
 
 ######## OPTIONAL ########
-# execute t-test using function
+# execute t-test using function 't.test'
 # look up ttest
 # check if possible using algebra 
 
