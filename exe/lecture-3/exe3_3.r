@@ -13,10 +13,10 @@
 # use complete names, i.e. including the dataframe
 ttest<-function(var, group){
   
-  # create groups
+  # 1. create groups
 
   
-  # 1. exclude missings
+  # 2. exclude missings
 
   
 
