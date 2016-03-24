@@ -18,7 +18,7 @@
 
 
 
-# 4. use a preprogrammed function colMeans
+# 3. use a preprogrammed function colMeans
 # set missing values first to NA!
 
 
