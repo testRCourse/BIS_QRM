@@ -4,7 +4,9 @@
 #################################################
 ################# read datafile  #################
 #################################################
-# Each group will be assigned two countries
+# Each group selects two countries
+# note. it is nice to select these countries based on 
+# ideas why the missing values differ
 
 
 #################################################
