@@ -1,12 +1,20 @@
-
 #$$$$$$$$$$$$$$ ASSIGNMENT 1 $$$$$$$$$$$$$$$$$$$$$$$$$#
+
+# NOTE:
+# include only the code that you have used to obtain your answer
+# hand in a clean version!
+
+# interpret the results, describe what you have found
+# and what it means for the main goal of this assignment:
+# to explore missingness of income across two countries
+
+# use comment lines for your answer
+
 
 #################################################
 ################# read datafile  #################
 #################################################
 # Each group selects two countries
-# note. it is nice to select these countries based on 
-# ideas why the missing values differ
 
 
 #################################################
@@ -22,7 +30,7 @@
 
 
 
-# 2. describe income for each country separately.
+# 2. explore income for each country separately
 # inspect differences across countries in distribution 
 # (frequencies, descriptives, normality)
  
@@ -35,7 +43,7 @@
 ################# explore missing data  #################
 #########################################################
 # 3. are the people who have missings on income more likely
-#    to have a certain education level? in each country?
+# to have a certain education level? in each country?
 # use a cross tab
 # recode variable so that missings are NOT NA (or use is.na())
 # otherwise it will not show using the common R commands
@@ -63,7 +71,6 @@
 
 
 
-
 #########################################################
 ##################### conduct MI imputation  #############
 #########################################################
@@ -77,7 +84,7 @@
 #########################################################
 ############## inspect effect of MI imputation  #########
 #########################################################
-# 7. discuss the effects of imputation with listwise deletion.
+# 7. compare effects of imputation with listwise deletion
 # estimate a simple linear model 'lm'
 
 
