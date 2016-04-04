@@ -48,7 +48,10 @@
 
 # for instance education 
 # 1. create missingness variable
+# use ifelse command
 
+
+# check with another command (summary, length etc)
 
 
 
