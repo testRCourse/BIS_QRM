@@ -7,6 +7,7 @@
 # using package 'mvnlme'
 
 
+
 # select part of dataset 
 # include satisfaction
 # you are free to select another set of variables
@@ -15,16 +16,18 @@
 
 
 
-# explore correlations/covariances 
-# use function 'cor'
-
-
 
 
 # use function 'mlest' to estimate missing values
 # write results to object
 # extract only covariance matrix
 
+
+
+
+# compare with not listwise and pairwise deletion 
+# explore covariance matrices
+# use cov function
 
 
 
@@ -45,14 +48,16 @@
 
 
 #########################################################
-############## inspect effect of MI imputation  ######
+############## inspect effect of MI imputation  #########
 #########################################################
 # estimate a simple linear model 'lm'
-# with the variables included in the imputed dtaa above
-
+# with the variables included in the imputed data above
 # TIP: estimate the model on each imputed dataset
-# use 'mi.meld' to combine the coefficients 
+# use 'mi.meld' to combine the coefficients (look at example)
 
 
 
 # estimate the model on the dataset with missing data
+# i.e. use listwise deletion 
+
+
