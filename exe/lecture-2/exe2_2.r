@@ -14,7 +14,8 @@
 
 
 # select a set of interval variables (likert scales included)
-# Little MCAR assumes multivariate normal distribution
+# make sure that all the negative values are coded as NA
+# note that Little MCAR assumes multivariate normal distribution
 
 
 # conduct test
