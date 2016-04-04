@@ -13,7 +13,7 @@
 # Then load the package into your environment so you can use the commands:
 
 
-# look for informaiton about function
+# look for information about function
 # Note that Little MCAR assumes multivariate normal distribution
 # i.e. this requires interval assumption
 
