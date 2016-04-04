@@ -22,7 +22,7 @@
 
 
 
-# 2. explore income for each country separately
+# 2. describe income for each country separately.
 # inspect differences across countries in distribution 
 # (frequencies, descriptives, normality)
  
@@ -35,7 +35,7 @@
 ################# explore missing data  #################
 #########################################################
 # 3. are the people who have missings on income more likely
-# to have a certain education level? in each country?
+#    to have a certain education level? in each country?
 # use a cross tab
 # recode variable so that missings are NOT NA (or use is.na())
 # otherwise it will not show using the common R commands
@@ -63,6 +63,7 @@
 
 
 
+
 #########################################################
 ##################### conduct MI imputation  #############
 #########################################################
@@ -76,7 +77,7 @@
 #########################################################
 ############## inspect effect of MI imputation  #########
 #########################################################
-# 7. compare effects of imputation with listwise deletion
+# 7. discuss the effects of imputation with listwise deletion.
 # estimate a simple linear model 'lm'
 
 
