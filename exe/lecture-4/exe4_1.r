@@ -1,41 +1,44 @@
 #$$$$$$$$$$$$$$$$$$$$$$$$$$$$$   EXE 4.1  $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$#
 
-#########################################################
-#################  data cleaning ########################
-#########################################################
-# read file
-# select two variables (interval, check with frequencies)
-# explore missing values (you do not have to test for 
-# missingness at random)
+#################################################
+################# write function  ###############
+#################################################
+###### a first exercise to learn how to write functions
+###### to let R do several operations at the same time
+###### for this exercise you need to select several
+###### columns in the WVS dataset. Do not select less than
+###### 5 but also not more than 
+###### 10 columns as this unnecessarily complicates
+###### the exercise.
+
+# 1. calculate the means of the variables
+# fist set the missing values to NA
+# a) create function without loop (for each variable separately)
 
 
 
-#########################################################
-################# linear regression #####################
-#########################################################
-# 1. Write vectorised function of linear regression
-# using equations of b0 and b1
+
+
+# b) do this using a for loop within function
 
 
 
 
 
-# 2. write vectorized function of linear regression
-# using the sum of squares method
+
+# c) use a preprogrammed function colMeans to 
+# calculate the means across a preselected set of
+# columns
+# set missing values first to NA!
 
 
 
-# 3. check solutions with regular lm function
 
-
-
-#########################################################
-################# display residuals #####################
-#########################################################
-# make a plot of the x and y variable
-# ad regression line with b0 and b1 using 'abline'
-
-
+# d) use a preprogrammed function apply to 
+# calculate the means across a preselected set of
+# columns
+# use na.rm argument to deal with missings
+# look up function ?apply!
 
 
 
