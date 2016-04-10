@@ -1,36 +1,20 @@
-#$$$$$$$$$$$$$$$$$$$$$$$$$$$$$  EXE 5.2  $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$#
 
-#########################################################
-################# multiple regression #####################
-#########################################################
-## run multiple regression using the cost function
-# add country to the simple regression example 5.1 data
-# create dummy variable of country
-# use listwise deletion
+#$$$$$$$$$$$$$$$$$$$$$$$$$$$$$   EXE 5.2  $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$#
 
 
-
-
-
-# create independent variable matrix with intercept
-# make sure the independent variables is a matrix, not list
+#####################################################################
+####################### multiple regression ###########################
+#####################################################################
+# 2. center all your independent variables around a meaningful value 
+# for instance the mean and estimate the model again
 
 
 
 
-
-
-# solve equation
-# check with lm()
+# compare with the uncentered model 
 
 
 
 
-#_________________________________________  OPTIONAL _______________________________________________________________#
-
-# calculate standardized coefficients
-
-
-
-
-
+# place plots next to each other using par function
+# check out the argument mfrow
