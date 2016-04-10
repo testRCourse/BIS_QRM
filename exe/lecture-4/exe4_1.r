@@ -1,44 +1,32 @@
 #$$$$$$$$$$$$$$$$$$$$$$$$$$$$$   EXE 4.1  $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$#
 
-#################################################
-################# write function  ###############
-#################################################
-###### a first exercise to learn how to write functions
-###### to let R do several operations at the same time
-###### for this exercise you need to select several
-###### columns in the WVS dataset. Do not select less than
-###### 5 but also not more than 
-###### 10 columns as this unnecessarily complicates
-###### the exercise.
+#####################################################################
+####################### dummy variable / t-test #####################
+#####################################################################
+# 1. estimate a model with only one dummy variable for one country to explain 
+# satisfaction
 
-# 1. calculate the means of the variables
-# fist set the missing values to NA
-# a) create function without loop (for each variable separately)
+# a) create a dummy variable where the 1 indicates it is one country
+# and 0 indicates another country 
+# you are free to select the countries, look up countrycodes.txt on github
 
 
 
 
-
-# b) do this using a for loop within function
-
-
-
-
-
-
-# c) use a preprogrammed function colMeans to 
-# calculate the means across a preselected set of
-# columns
-# set missing values first to NA!
+# b) include this variable into your model to explain satisfaction
+# you can use the lm function
+# interpret the intercept and coefficient
 
 
 
 
-# d) use a preprogrammed function apply to 
-# calculate the means across a preselected set of
-# columns
-# use na.rm argument to deal with missings
-# look up function ?apply!
+# c) change the levels of the dummy variable
+# use function relevel()
+# compare with previous results
 
+
+
+
+# d) compare with a t-test (using the function ?t.test) 
 
 
