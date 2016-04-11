@@ -1,0 +1,186 @@
+#$$$$$$$$$$$$$$$$$$$$$$$$$$$$$   EXE 4.1  $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$#
+
+
+# load in datafile
+dataSet <- read.table("C:/Users/mmn269/Downloads/4.5 Quantitative Research Methods BIS/QRMBIS/WVS2005.csv", header=TRUE, sep=";")
+# change variable names
+newNames <- c("country","satis","trust","cosmo1","cosmo2","cosmo3","cosmo4",
+              "work1","work2","work3","work4","work5","work6",
+              "envcom1","envcom2","envcom3","envwrld1","envwrld2","envwrld3",
+              "wtp1","wtp2","wtp3","emanc1","emanc2","emanc3","emanc4",
+              "insight1","insight2","insight3","insight4",
+              "PC","gender","age","ageR", "marital","child","edu","eduR",
+              "employ","chief","socclass","income","weight")
+colnames(dataSet)<- newNames
+
+#####################################################################
+####################### dummy variable / t-test #####################
+#####################################################################
+# 1. estimate a model with only one dummy variable for one country to explain 
+# satisfaction
+
+# a) create a dummy variable where the 1 indicates it is one country
+# and 0 indicates another country 
+# you are free to select the countries, look up countrycodes.txt on github
+# make sure the countries are included in the datafile using table()
+
+table(dataSet$country) # look at which countrycodes are included
+
+# create new variable
+# there are several ways:
+dataSet$dummy <- NA
+dataSet[,"dummy"]<-NA
+# or in two steps:
+dummy <- rep(length=nrow(dataSet),NA)
+cbind(dataSet,dummy)
+
+# check whether it went ok
+dataSet[1:10,]
+
+# assign a zero a one to two countries
+# first select the rows on these countries
+# then select the variable dummy
+# then assign the value to this variable for these rows
+dataSet[dataSet$country==840,"dummy"] <- 0 # USA
+dataSet[dataSet$country==528,"dummy"] <- 1 # NL
+
+# check whether it went ok
+table(dataSet$dummy)
+
+
+
+# b) include this variable into your model to explain satisfaction
+# you can use the lm function
+# interpret the intercept and coefficient
+
+# if you did not do this yet, recode the negative numbers to missing
+dataSet$satis[dataSet$satis<0]<-NA
+# put the dependent variable first
+summary(lm(satis~dummy, data=dataSet))
+# or (equivalent):
+summary(lm(dataSet$satis~dataSet$dummy))
+
+# the intercept is the level of satis when X (dummy) is zero
+# thus the people in the USA have an average level of satis of 7.26 
+# on the scale of 1-10:
+table(dataSet$satis)
+# the coefficients shows the increase in satis for dummy==1
+# thus the people in the NL have an average level of satis
+# of 7.26 + .46*1
+
+
+
+# c) explain satisfaction with gender
+table(dataSet$gender) # see first what the variable looks like
+dataSet$gender[dataSet$gender<0]<-NA
+
+summary(lm(satis~gender, data=dataSet))
+
+
+# d) change the dummy variable to factor and run the analysis again
+dataSet$genderf<-factor(dataSet$gender, levels=c(1,2), labels=c("male","female"))
+summary(lm(satis~genderf, data=dataSet))
+# or do it simultaneously:
+summary(lm(satis~factor(gender), data=dataSet))
+# or first recode and then estimate lm:
+dataSet$genderd <- NA # create dummy
+# if you have NAs in your data, you have to explicitly exclude them!
+dataSet[dataSet$gender==1 & !is.na(dataSet$gender),"genderd"]<-0 
+dataSet[dataSet$gender==2 & !is.na(dataSet$gender),"genderd"]<-1
+table(dataSet$genderd) #check
+summary(lm(satis~genderd, data=dataSet))
+
+
+
+# e) change the levels of gender
+# use function relevel()
+# compare with previous results
+dataSet$genderf<-relevel(dataSet$genderf, ref="female")
+summary(lm(satis~genderf, data=dataSet))
+
+
+
+
+# d) compare with a t-test (using the function ?t.test) 
+
+t.test(dataSet$satis~dataSet$gender)
+
+
+#$$$$$$$$$$$$$$$$$$$$$$$$$$$$$   EXE 4.2  $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$#
+
+#####################################################################
+########################### ordinal variables #######################
+#####################################################################
+# 1. estimate a model with one ordinal variable to explain 
+# satisfaction (you can choose from eduR or ageR)
+
+# a) include the variable as it is now in the model (so as numeric value,
+# if you already changed it to a factor variable, change it back to numeric
+# by as.numeric()
+# interpret the intercept and coefficient
+dataSet$eduR[dataSet$eduR<0]<-NA
+summary(lm(satis~eduR, data=dataSet))
+
+
+# b) recode the variable so that the lower level is a zero
+# TIP create a new variable so you still have the original variable
+# compare the results with the one you obtained above
+# interpret the intercept and coefficient
+
+# create new variable
+dataSet[,"eduRR"]<-NA
+dataSet[dataSet$eduR==1 & !is.na(dataSet$eduR),"eduRR"]<-0 
+dataSet[dataSet$eduR==2 & !is.na(dataSet$eduR),"eduRR"]<-1
+dataSet[dataSet$eduR==3 & !is.na(dataSet$eduR),"eduRR"]<-2
+table(dataSet$eduRR) # check
+
+# the intercept has changed because now it represents the lowest category
+# as this is now zero. Before the zero was a hypothetical value
+summary(lm(satis~eduRR, data=dataSet))
+
+
+# c) estimate the model with the ordinal variable as a factor 
+# include the factor( ) command in the lm command
+# interpret the intercept and coefficient
+
+# as you include the variable eduR as a factor, lm function creates
+# dummy variables for each (minus one which becomes the reference) category
+# thus a one point increase again means whether someone has a medium level of
+# education (in the case of the second parameter)
+
+# the first coefficient is the intercept, i.e. the mean level of satis
+# for the lowest category of eduR
+# the second coefficient is the increase in mean level of satis 
+# for the second category...and so on
+summary(lm(satis~factor(eduR), data=dataSet))
+
+
+
+#______________________ OPTIONAL ______________________________#
+# d) plot the two variables using plot()
+# include the effect estimated with the lm function
+# TIP you need to include two lines! look at $coefficients
+# obtained with the lm function
+
+# first assign the lm results to a object
+z<-summary(lm(satis~factor(eduR), data=dataSet))
+# inspect the coefficient matrix
+z$coefficients
+z$coef # does the same thing
+
+# note. the dependent variable should be second!
+plot(dataSet$eduR,dataSet$satis)
+abline(a=z$coef[1,1], b=z$coef[2,1], col="red")
+
+
+
+#$$$$$$$$$$$$$$$$$$$$$$$$$$$$$   EXE 4.3  $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$#
+
+#####################################################################
+####################### interval variable ###########################
+#####################################################################
+# 1. estimate a model with one interval variable to explain 
+# satisfaction (you can choose income)
+summary(lm(satis~income, data=dataSet))
+
+
