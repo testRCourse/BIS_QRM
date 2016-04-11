@@ -1,0 +1,169 @@
+#$$$$$$$$$$$$$$$$$$$$$$$$$$$$$   EXE 2.1  $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$#
+
+#########################################################
+#################  data cleaning ########################
+#########################################################
+# find mistakes in recoded variables
+# Look at ageR (= categorical variable)
+# Check with age (= ratio variable)
+
+table(dataSet$ageR)
+# recode negative values to missings
+dataSet$ageR[dataSet$ageR<0]<-NA
+table(dataSet$ageR)
+
+# check out value of 98
+dataSet[dataSet$ageR==98 & !is.na(dataSet$ageR),"age"]
+
+
+# Recode ageR so that it makes sense
+dataSet$ageR[dataSet$ageR==98 & !is.na(dataSet$ageR),"ageR"]<-6
+
+
+# change to factor
+# add labels
+dataSet$ageRf <-factor(dataSet$ageR,levels = c(1,2,3,4,5,6),
+                  labels=c("15-24","25-34", "35-44", 
+                           "45-54","55-64", "65+")) 
+attributes(dataSet$ageRf)
+levels(dataSet$ageRf)
+
+
+# change levels to numeric values
+dataSet$ageRf
+as.numeric(dataSet$ageRf)
+
+
+
+# explore edu in similar fashion as above
+# check irregularities
+table(dataSet$eduR, dataSet$edu) # cross table since there are not so many categories
+# set to missing
+dataSet$eduR[dataSet$eduR<0]<-NA
+dataSet$ageRf <-factor(dataSet$eduR,levels = c(1,2,3),
+                       labels=c("low","middle", "high")) 
+
+
+#########################################################
+################# explore missing data  #################
+#########################################################
+# assign values to missing data
+# use na.omit, rm.na or is.na
+# across a set of countries
+
+# explore PC, which has the following four categories:
+# 1. Never
+# 2. Occasionally
+# 3. Frequently
+# 4. Don´t know what a computer is
+
+table(dataSet$PC)
+dataSet$PC[dataSet$PC<0]<-NA # we are not interested in the different missing values
+
+# a) compare missing values across countries
+# in which countries the question has not been asked?
+
+# only those countries with FALSE==0 are completely missing
+table(is.na(dataSet$PC), dataSet$country)
+# or the countries with TRUE == 0 when you use complete.cases instead of is.na
+table(complete.cases(dataSet$PC), dataSet$country)
+
+
+# b) compare 4 values across countries
+# which countries have no people who dont know a computer?
+table(dataSet$PC, dataSet$country) # look at category 4
+
+
+# c) recode variable so you can use it for analysis as ordinal variable
+# in this case the first three categories follow an order, but the fourth
+# category does not. so we will recode the variable by makeing the fourth
+# into missing
+dataSet$PCR <- dataSet$PC
+dataSet$PCR[dataSet$PCR==4]<-NA
+table(dataSet$PC, dataSet$PCR)
+
+
+
+#______________________ OPTIONAL ______________________________#
+
+# which variables have only missing values?
+# TIP: use apply function
+# for a dataframe you can also use sapply
+apply(dataSet,2,function(x) sum(is.na(x)))
+sapply(dataSet,function(x) sum(is.na(x)))
+
+
+
+
+#______________________ END OPTIONAL ______________________________#
+
+# delete variables
+dataSet<-dataSet[,-dataSet$eduRR]
+
+#$$$$$$$$$$$$$$$$$$$$$$$$$$$$$   EXE 2.2  $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$#
+
+#########################################################
+##################### conduct MCAR test  #################
+#########################################################
+# you can find the entire function on github:
+# https://github.com/cran/BaylorEdPsych/blob/master/R/LittleMCAR.R
+# First install the package:
+
+# install accompagning package "mvnmle"
+install.packages("BaylorEdPsych")
+
+# Then load the package into your environment so you can use the commands:
+library("BaylorEdPsych", lib.loc="C:/R-3.2.2/library")
+
+# select a set of interval variables (likert scales included)
+# Little MCAR assumes multivariate normal distribution
+colnames(dataSet)
+x.dat<-dataSet[,c(2,37,39,42)]
+
+# conduct test
+# TIP: write results away immediately because test takes a long time to run
+x.littlemcar <- LittleMCAR(x.dat)
+
+# explore results by either $
+# or by []
+x.littlemcar$chi.square
+x.littlemcar$p.value
+x.littlemcar[c("chi.square", "df", "p.value")]
+
+# a significant p value indicates not missing at random 
+# we will discuss this during a lecture on missingness
+
+
+#########################################################
+##################### conduct MAR test  #################
+#########################################################
+# create a function to test for missingness on one variable
+# using a t-test at another set of (interval) variables
+
+# for instance education 
+
+# 1. create missingness variable
+table(dataSet$edu)
+dataSet$edu[dataSet$edu<0]<-NA
+
+# use recode command
+dataSet$missedu <- dataSet$edu
+dataSet[is.na(dataSet$edu),"missedu"]<-0
+dataSet[!is.na(dataSet$edu),"missedu"]<-1
+table(dataSet$missedu)
+# or ifelse function
+dataSet$missedu <- ifelse(is.na(dataSet$edu),0 , 1)
+table(dataSet$missedu)
+# check
+length(dataSet$edu[!is.na(dataSet$edu)])
+
+
+# 2. t-test
+# use function you created before.
+# group is not the missingness variable
+
+t.test(dataSet$cosmo1, dataSet$missedu)
+
+# if significant, the means of cosmo1 are different
+# for the group of people who have a missing value on edu
+# and those who have not.
