@@ -3,7 +3,7 @@
 
 
 #####################################################################
-####################### multiple regression ###########################
+#######################  mean centering   ###########################
 #####################################################################
 # 2. center all your independent variables around a meaningful value 
 # for instance the mean and estimate the model again
