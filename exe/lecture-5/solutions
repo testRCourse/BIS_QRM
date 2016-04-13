@@ -1,0 +1,124 @@
+#$$$$$$$$$$$$$$$$$$$$$$$$$$$$$   EXE 5.1  $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$#
+
+
+# load in datafile
+dataSet <- read.table("U:/Rcourses_2016/WVS/WVS2005.csv", header=TRUE, sep=";")
+# change variable names
+newNames <- c("country","satis","trust","cosmo1","cosmo2","cosmo3","cosmo4",
+              "work1","work2","work3","work4","work5","work6",
+              "envcom1","envcom2","envcom3","envwrld1","envwrld2","envwrld3",
+              "wtp1","wtp2","wtp3","emanc1","emanc2","emanc3","emanc4",
+              "insight1","insight2","insight3","insight4",
+              "PC","gender","age","ageR", "marital","child","edu","eduR",
+              "employ","chief","socclass","income","weight")
+colnames(dataSet)<- newNames
+
+# set weight to numeric
+dataSet$weight <- as.numeric(sub(",",".",dataSet$weight))
+
+# set missing values
+dataSet[dataSet<0]<-NA
+#####################################################################
+####################### multiple regression ###########################
+#####################################################################
+# 1. estimate a regression equation with two independent interval 
+# or ordinal treated as interval variables
+# plot the line of the first variable
+z<-summary(lm(satis~income+socclass, data=dataSet))
+plot(dataSet$income, dataSet$satis)
+abline(a=z$coef[1,1], b=z$coef[2,1], col="red")
+# the intercept is the mean level of satis for an income of zero and socclass of zero
+# note that these are hypothetical values simply obtained by drawing the straight line
+# (i.e. assuming linearity)
+# the coefficient of income shows that for every level of socclass, 
+# a one-point increase in income results in a .20 increase in satis
+
+
+
+# compare with a model that only includes one variable
+summary(lm(satis~income, data=dataSet))
+z
+# when we control for socclass, the effect of income becomes smaller
+# this means that a one-point increase in income results in .23 increase in satis
+
+
+
+
+#$$$$$$$$$$$$$$$$$$$$$$$$$$$$$   EXE 5.2  $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$#
+
+
+#####################################################################
+####################### multiple regression ###########################
+#####################################################################
+# 2. center all your independent variables around a meaningful value 
+# for instance the mean and estimate the model again
+summary(dataSet$income)
+summary(dataSet$socclass)
+
+dataSet$mincome <- dataSet$income- 4.572
+dataSet$msocclass <- dataSet$socclass- 3.373
+
+
+z1<-summary(lm(satis~mincome+msocclass, data=dataSet))
+
+
+# compare with the uncentered model 
+z
+z1
+# the intercept is larger in the mean-centered model
+# because now the intercept represents the mean level 
+# of satis when income and socclass are average (=0)
+
+
+
+# place plots next to each other using par function
+# check out the argument mfrow
+par(mfrow=c(1,2)) # mfrow puts the plots in a space of c(1,2) by row
+plot(dataSet$income, dataSet$satis)
+abline(a=z$coef[1,1], b=z$coef[2,1], col="red")
+plot(dataSet$mincome, dataSet$satis)
+abline(a=z1$coef[1,1], b=z1$coef[2,1], col="red")
+
+#$$$$$$$$$$$$$$$$$$$$$$$$$$$$$   EXE 5.3  $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$#
+
+
+#####################################################################
+####################### multiple regression ###########################
+#####################################################################
+# 3. standardize all variables
+
+Zsatis<-(dataSet$satis - mean(dataSet$satis, na.rm=TRUE))/sd(dataSet$satis, na.rm=TRUE)
+Zincome<-(dataSet$income - mean(dataSet$income, na.rm=TRUE))/sd(dataSet$income, na.rm=TRUE)
+Zsocclass<-(dataSet$socclass - mean(dataSet$socclass, na.rm=TRUE))/sd(dataSet$socclass, na.rm=TRUE)
+
+# compare with the unstandardized model
+# plot the unstandardized and standardized model next to each other
+# for the first explanatory variable
+z
+z2<- summary(lm(Zsatis~Zincome+Zsocclass))
+# now the one-point increase in income leads to a .20 increase in satis
+# however a one-point increase no longer refers to original scale
+# but to the standard deviation (whihc is now 1):
+sd(Zincome, na.rm=TRUE)
+# remember: all standardized variables have a mean of zero, and
+# standard deviation of one!
+
+
+# IF the lm function cannot perform listwise deletion when using vectors (i.e. Zsatis is not attached to the dataset)
+# you need to create a dataframe including these three variables
+# then R knows which lines should be deleted to perform listwise deletion
+datnew<-as.data.frame(cbind(Zsatis, Zincome, Zsocclass))
+summary(lm(Zsatis~Zincome+Zsocclass, data=datnew))
+
+
+#______________________ OPTIONAL ______________________________#
+# include legend in the plot with the coefficient
+# change axis labels
+plot(Zincome,Zsatis,col="blue",
+     main = "satis & income",
+     xlab="income",ylab="satis")
+abline(a=z$coef[1,1], b=z$coef[2,1],lty="dashed", col="red")
+legend("topright", bty="n", 
+       legend=paste("beta coefficient =", 
+       round(z2$coef[2,1], digits=3)))
+
