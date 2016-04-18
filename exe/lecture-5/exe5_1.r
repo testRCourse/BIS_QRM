@@ -2,7 +2,7 @@
 
 
 #####################################################################
-####################### multiple regression ###########################
+####################### control for variables ###########################
 #####################################################################
 # 1. estimate a regression equation with two independent interval 
 # or ordinal treated as interval variables

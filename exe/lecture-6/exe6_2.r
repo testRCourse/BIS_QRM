@@ -3,7 +3,7 @@
 ##################### mean centering ####################
 #########################################################
 # a. center your independent variables around a meaningful value
-# use a for loop 
+
 
 
 

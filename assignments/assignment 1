@@ -1,0 +1,115 @@
+
+#$$$$$$$$$$$$$$ ASSIGNMENT 1 $$$$$$$$$$$$$$$$$$$$$$$$$#
+
+####################################################
+################# test moderation  #################
+####################################################
+# you will conduct an analysis to explain willingness to pay
+# and the differences in willingness to pay (wtp)
+# across two countries
+# using two independent explanatory variables
+
+# for each of the subquestions below, show your code 
+# and present your argumentation 
+####################################################
+############ 1. explore dependent variable  ########
+####################################################
+# choose two countries 
+# NOTE avoid countries that only have missing values on wtp
+
+# a) how do the two countries differ in the dependent variable?
+# look at the distribution of dependent variables (wtp1, wtp2, wtp3)
+# per country
+
+
+
+
+# b) plot the differences in frequencies using stacked barplot
+# see second lecture (exe 1_3.r)
+
+
+
+
+# c) calculate a mean score across the two variables
+# to indicate wtp (think of reversed items!)
+
+
+####################################################
+############ 2. select independent variables  ########
+####################################################
+# Include two independent variables (other than country)
+# to explain the country differeces in wtp
+
+# a) How are the variables distributed across the countries?
+# discuss country differences, or the absence of them
+
+
+
+
+# b) calculate and discuss the correlations among the dependent 
+# and independent variables 
+
+
+
+
+# if (and only if) you choose one of the independent variables
+# to be a construct being measured by 
+# a multi-item scale:
+# c) calculate a mean score
+
+
+
+####################################################
+############ 3. add independent variables  ########
+####################################################
+# Estimate the regression with the lm() function
+# including the independent variables 
+# Interpret the coefficients and model fit
+# use the mean scores you calculated under 1. (and possibly 2.)
+
+# a) What can you say about the explanatory power of the 
+# independent variable?
+# NOTE build up your model, first one independent variable
+# and subsequently add the other independent variable
+# NOTE2 interpret the model fit of the two models
+
+
+
+
+# b) Interpret the intercept and beta coefficients
+# of the first and second model you estimated under 3a)
+# NOTE by interpretation I mean that you specify 
+# what a one-point increase in an independent variable
+# would mean for the dependent variable (in case of 
+# a beta coefficient). Be as detailed as possible.
+### See lecture slides
+
+
+
+
+####################################################
+############ 4. test moderation effect  ############
+####################################################
+# Ad a moderator variable to explore country effects
+# only for the independent variable examined
+# under 3.
+# NOTE: you need to create a dummy variable to compare 
+# the two countries which needs to be included as well
+
+
+# a) Create a moderator variable for the independent 
+# variable. Discuss why you expect a moderation effect
+# of country with this variable
+
+
+
+# b) estimate the regression equation and interpret
+# the intercept and beta coefficients
+
+
+
+# c) discuss the changes in the coefficients with the 
+# previous model without the moderator variable
+
+
+

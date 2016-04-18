@@ -16,8 +16,7 @@
 
 
 
-# b. solve the multiple regression equation with interaction term
-# check with lm function
+# b. estimate the multiple regression equation with interaction term
 # interpret the effects
 
 
