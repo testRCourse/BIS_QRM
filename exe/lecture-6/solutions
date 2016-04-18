@@ -1,0 +1,207 @@
+#$$$$$$$$$$$$$$$$$$$$$$$$$$$$$  EXE 6.1  $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$#
+setwd("D:/Rcourses_2016/Datasets") # note / instead of \ in windows 
+dataSet <- read.table("WVS2005.csv", sep=";",header=T) 
+colnames(dataSet)<-c("country","satis","trust","cosmo1","cosmo2","cosmo3","cosmo4",
+                     "work1","work2","work3","work4","work5","work6",
+                     "envcom1","envcom2","envcom3","envwrld1","envwrld2","envwrld3",
+                     "wtp1","wtp2","wtp3","emanc1","emanc2","emanc3","emanc4",
+                     "insight1","insight2","insight3","insight4",
+                     "PC","gender","age","ageR", "marital","child","edu","eduR",
+                     "employ","chief","socclass","income","weight")
+dataSet$weight <- as.numeric(sub(",",".",dataSet$weight))
+dataSet[dataSet<0]<-NA
+
+#########################################################
+################# test interaction effect  ##############
+#########################################################
+# first explore differences between countries in the two variables
+# check na's
+table(is.na(dataSet$country))
+dataSet$dummy<-NA
+# create dummy variable (needed to explore differences)
+dataSet[dataSet$country==840,"dummy"] <- 0 # USA
+dataSet[dataSet$country==528,"dummy"] <- 1 # NL
+
+# cross tabulation for country and the two variables
+table(dataSet$dummy, dataSet$satis)
+table(dataSet$dummy, dataSet$income)
+# mean value of the variables for each country
+summary(dataSet$satis[dataSet$dummy==0])
+summary(dataSet$satis[dataSet$dummy==1])
+
+# create frequency table for each country seperately
+# to create the stacked barplot
+incUSA <- table(dataSet$income[dataSet$dummy==0])
+incNL <- table(dataSet$income[dataSet$dummy==1])
+
+# create the barplot
+# first for USA, and then add the barplot for NL
+# by add=TRUE in the second barplot command
+barplot(incUSA, col='skyblue', xlab="Income", 	
+     main="Histogram of income", xlim=c(0,10)) 
+barplot(incNL, col=rgb(1,0,0,5/8), xlim=c(0,10), add=TRUE)
+legend("topright", c("USA", "NL"), fill=c("skyblue", "red"))
+
+# to view both barplots next to each other
+# first create space of 1 row and 2 columns using par:
+par(mfrow=c(1,2))
+# then show first barplot
+barplot(incUSA, col='skyblue', xlab="Income", 	
+        main="Histogram of income", xlim=c(0,10)) 
+# and additionally next barplot
+barplot(incNL, col="red", xlim=c(0,10))
+par(mfrow=c(1,1))
+
+
+
+
+# a. calculate the interaction term 
+# add the interaction term to the independent variables
+dataSet[,"inc_dummy"]<- dataSet$dummy * dataSet$income
+
+# check your new variable
+table(dataSet$inc_dummy)
+table(dataSet$income[dataSet$country==840])
+table(dataSet$dummy, dataSet$income)
+
+
+
+# b. estimate the multiple regression equation with interaction term
+# interpret the effects
+# NOTE build up your model, add a varaible at the time
+# and see if you can still interpret each coefficient
+# once you add the variables
+
+
+# step 1: only income
+summary(lm(satis~income, data=dataSet))
+# the intercept represents the mean level of satisfaction for income=0
+# note that income=0 is a hypothetical value (as it runs from 1 to 10)
+# the coefficient represents the effect of a one-point increase in income
+# on satisfaction, i.e. with each income level increase satisfaction increases by .23
+# NOTE: you test the model now on the entire sample (listwise deletion is default in R:
+# the cases with missing values on satis, income or both are excluded)
+
+# step 2: income and dummy
+summary(lm(satis~income + dummy, data=dataSet))
+# the intercept represents the mean level of satisfaction for income=0 and dummy=0
+# thus people in the USA with income of zero has on average a satisfaction levle of 6.20 
+# the coefficient represents the effect of a one-point increase in income
+# on satisfaction, i.e. with each income level increase satisfaction increases by .20975
+# holding the dummy constant, i.e. for each level of dummy, 
+# i.e. for people in the USA as well as NL one-point increase in income leads to 
+# an .20975 increase in satisfaction
+# dummy coefficient shows that people in the NL (=1) have .796 higher satisfaction then people in the USA (=0) 
+# holding income constant, thus for each level of income
+# NOTE: you test the model now on people from the two countries with NO missing values on satis and income
+
+# step 3: include the interaction effect
+# the intercept represents the mean level of satisfaction for income=0
+summary(lm(satis~income + dummy + inc_dummy, data=dataSet))
+# the intercept represents the mean level of satisfaction for income=0 and dummy=0 (and thus no interaction)
+# thus people in the USA with income of zero has on average a satisfaction levle of 5.929 
+# the coefficient represents the effect of a one-point increase in income
+# on satisfaction, i.e. with each income level increase satisfaction increases by .1439
+# for when dummy is zero, i.e. for people in the USA a one-point increase in income leads to 
+# an .1439 increase in satisfaction
+# the dummy coefficient shows that people in the NL (= 1) have 1.290 higher satisfaction then people in the USA (=0) 
+# for when income is zero.
+
+
+## c. assess model fit for multiple regression
+# The adjusted R2 increases with adding each step a variable to the model
+# NOTE. this might not be the case if the explained variance by the added variable is very low (but still significant)
+# overall, an added variable with a significant efect on the dependent variable
+# will lead to a higher adjusted R2.
+
+
+# R2 adjusted for model 1: .05155
+# R2 adjusted for model 2: .07833
+# R2 adjusted for model 3: .08288
+# the last model has the most explained variance
+# of all the variation in the dependent variable, 8% is explained by
+# the independent variables
+
+
+#$$$$$$$$$$$$$$$$$$$$$$$$$$$$$  EXE 6.2  $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$#
+#########################################################
+##################### mean centering ####################
+#########################################################
+# a. center your independent variables around a meaningful value
+dataSet$mincome <- dataSet$income - mean(dataSet$income, na.rm=TRUE)
+# I take the mean here, as the average income level is interesting to
+# country level statistics. Other possible meaningful values could be
+# the first value or the last value. For example, if you want to 
+# measure the effect of time (measured in months) on sales, you could take the 
+# the first value as a reference. Then the intercept represents the
+# mean sales for the first month, and the coefficient the increase of sales with
+# each month (month being a variable numbered from 1 to 12). This would be called
+# first value centering.
+
+# check your new variable
+summary(dataSet$mincome)
+table(round(dataSet$mincome, digits=3))
+table(dataSet$income,round(dataSet$mincome, digits=3)) # compare with original values
+
+# compare across countries included in the analysis
+table(dataSet$dummy,round(dataSet$mincome, digits=3))
+
+
+# b. calculate the interaction term using the centered values
+# add the interaction term to the independent variables
+dataSet$minc_dummy <- dataSet$dummy * dataSet$mincome
+
+# check your new variables
+summary(dataSet$minc_dummy)
+table(round(dataSet$minc_dummy, digits=3))
+table(dataSet$dummy,round(dataSet$minc_dummy, digits=3))
+
+
+# compare the variable across countries
+table(dataSet$dummy,round(dataSet$mincome_dummy, digits=3))
+
+
+# c. conduct multiple regression to test interaction with lm function
+# interpret the effects
+# compare to uncentered solution and the centered solution without interaction term
+
+# step 1: only income
+summary(lm(satis~mincome , data=dataSet))
+# the intercept represents the mean level of satisfaction for income=0
+# note that income=0 is now the average level of income 
+# thus: the people with an average income have on average a 6.673 level of satisfaction
+# the coefficient represents the effect of a one-point increase in income
+# on satisfaction, i.e. with each income level increase satisfaction increases by .23
+# NOTE; this remains the same as before: a one-point increase is still the same
+
+# step 2: income and dummy
+summary(lm(satis~mincome + dummy, data=dataSet))
+# the intercept represents the mean level of satisfaction for income=0 and dummy=0
+# note that income=0 is now the average level of income 
+# thus: the people in the USA with an average income have on average a 7.161 level of satisfaction
+# the coefficient represents the effect of a one-point increase in income
+# on satisfaction, i.e. with each income level increase satisfaction increases by .20975
+# holding the dummy constant, i.e. for each level of dummy, 
+# i.e. for people in the USA as well as NL one-point increase in income leads to 
+# an .20975 increase in satisfaction
+# dummy coefficient shows that people in the NL (=1) have .796 higher satisfaction then people in the USA (=0) 
+# holding income constant, thus for each level of income
+
+# step 2: add interaction effect 
+summary(lm(satis~mincome + dummy + minc_dummy, data=dataSet))
+# the intercept represents the mean level of satisfaction for income=0 and dummy=0 (and thus no interaction)
+# thus people in the USA with an average income have on average a satisfaction level of 7.136
+# the income coefficient shows that an increase of one-point in income leads 
+# to a .264 higher satisfaction BUT now for only for dummy =0! Thus, only for the USA
+# i.e. for people in the USA a one-point increase in income leads to 
+# an .264 increase in satisfaction
+# the dummy coefficient shows that an increase of one-point, i.e. for people in the NL (= 1) leads 
+# to a 1.290 higher satisfaction compared to the USA for when income =0
+# i.e. for people at all levels of income the NL is 1.290 more satisfied than the USA
+# the interaction coefficient shows that an increase of one-point in income leads 
+# to a .12 lower satisfaction for people in the NL (= 1) 
+# compared to a one-point increase in income for people in the USA (=0) 
+
+## d. assess model fit for multiple regression
+
+# see  exercise 6_1
